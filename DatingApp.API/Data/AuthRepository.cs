@@ -24,7 +24,7 @@ namespace DatingApp.API.Data
             if(!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             return null;
 
-            return new User(){};
+            return user;
             
         }
 
@@ -72,7 +72,7 @@ namespace DatingApp.API.Data
             if(await _context.Users.AnyAsync(x => x.Username == username))
                     return true;
 
-            return true;
+            return false;
         }
     }
 }
