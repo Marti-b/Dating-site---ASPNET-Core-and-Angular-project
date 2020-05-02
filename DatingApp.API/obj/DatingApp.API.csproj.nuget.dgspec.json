@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj": {}
+    "C:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj": {}
   },
   "projects": {
-    "c:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj": {
+    "C:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj",
+        "projectUniqueName": "C:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj",
         "projectName": "DatingApp.API",
-        "projectPath": "c:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj",
+        "projectPath": "C:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\DatingApp.API.csproj",
         "packagesPath": "C:\\Users\\marti\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\obj\\",
+        "outputPath": "C:\\Users\\marti\\Documents\\Github\\Dating-site---ASPNET-Core-and-Angular-project\\DatingApp.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
