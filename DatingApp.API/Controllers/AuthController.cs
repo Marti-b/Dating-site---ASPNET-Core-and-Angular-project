@@ -46,6 +46,8 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login (UserForLoginDto userForLoginDto)
         {
+            // throw new Exception("computer says no!");
+            
              // Checking to make sure we have a user and their username & password that matches what stored in database
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 
