@@ -16,7 +16,7 @@
 
     <div *ngIf="loggedIn()" class="dropdown">
       <a class="dropdown-toggle text-light" >
-        Welcome user
+        Welcome {{authService.decodedToken?.unique_name | titlecase}}
       </a>
       <li class="nav-item">
         <a class="nav-link text-light" (click)="logout()">Logout</a>
