@@ -65,3 +65,4 @@ C:\Users\marti\Documents\Github\Dating-site---ASPNET-Core-and-Angular-project\Da
 C:\Users\marti\Documents\Github\Dating-site---ASPNET-Core-and-Angular-project\DatingApp.API\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
 C:\Users\marti\Documents\Github\Dating-site---ASPNET-Core-and-Angular-project\DatingApp.API\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\marti\Documents\Github\Dating-site---ASPNET-Core-and-Angular-project\DatingApp.API\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\marti\Documents\Github\Dating-site---ASPNET-Core-and-Angular-project\DatingApp.API\bin\Debug\netcoreapp3.1\Data\UserSeedData.json
