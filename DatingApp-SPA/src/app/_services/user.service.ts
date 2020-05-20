@@ -6,9 +6,9 @@ import { User } from '../_models/user';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Authorazation' : 'Bearer ' + localStorage.getItem('token')
+    Authorization: 'Bearer ' + localStorage.getItem('token')
   })
-}
+};
 
 @Injectable({
   providedIn: 'root'
