@@ -20,6 +20,8 @@ import { MessagesComponent } from './messages/messages.component';
 import { appRoutes } from './routes';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
 
 
 export function tokenGetter() {
@@ -59,7 +61,9 @@ export function tokenGetter() {
   ],
   providers: [
     AuthService,
-    ErrorInterceptorProvider
+    ErrorInterceptorProvider,
+    MemberDetailResolver,
+    MemberListResolver
   ],
   bootstrap: [
     AppComponent
