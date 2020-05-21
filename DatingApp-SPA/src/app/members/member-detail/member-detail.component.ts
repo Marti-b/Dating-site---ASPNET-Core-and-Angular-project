@@ -18,6 +18,7 @@ export class MemberDetailComponent implements OnInit {
   galleryImages: NgxGalleryImage[];
 
   constructor(private userService: UserService, private alertify: AlertifyService,
+    // tslint:disable-next-line: align
     private route: ActivatedRoute) { }
 
   ngOnInit() {
