@@ -28,6 +28,7 @@ import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { AlertifyService } from './_services/alertify.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserService } from './_services/user.service';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
 
 export function tokenGetter() {
@@ -84,6 +85,7 @@ export function tokenGetter() {
     MemberListResolver,
    // {provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig},
     MemberEditResolver,
+    PreventUnsavedChanges
 
   ],
   bootstrap: [
