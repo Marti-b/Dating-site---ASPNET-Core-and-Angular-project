@@ -47,6 +47,7 @@ namespace DatingApp.API.Controllers
        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
+            //checking if the user id from the token, matches the user id in the route
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
