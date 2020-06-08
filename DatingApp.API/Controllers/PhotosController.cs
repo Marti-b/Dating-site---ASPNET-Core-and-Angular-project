@@ -37,7 +37,7 @@ namespace DatingApp.API.Controllers
 
             _cloudinary = new Cloudinary(acc);
         }
-        [HttpGet("{id}", Name="GetPhoto")]
+        [HttpGet("{id}", Name = "GetPhoto")]
         public async Task<IActionResult> GetPhoto(int id)
         {
             var photoFromRepo = await _repo.GetPhoto(id);
@@ -49,14 +49,13 @@ namespace DatingApp.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddPhotoFor(int userId, PhotoForCreationDto photoForCreationDto)
+        public async Task<IActionResult> AddPhotoFor(int userId, [FromForm]PhotoForCreationDto photoForCreationDto)
         {
             //checking if the user id from the token, matches the user id in the route
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
             var userFromRepo = await _repo.GetUser(userId);
-
             var file = photoForCreationDto.File;
 
             var uploadResult = new ImageUploadResult();
@@ -65,33 +64,33 @@ namespace DatingApp.API.Controllers
             {
                 using (var stream = file.OpenReadStream())
                 {
-                    var uploadParams = new ImageUploadParams()
+                    var uploadParams = new ImageUploadParams
                     {
                         File = new FileDescription(file.Name, stream),
                         Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
                     };
+
                     uploadResult = _cloudinary.Upload(uploadParams);
                 }
             }
 
             photoForCreationDto.Url = uploadResult.Uri.ToString();
-            photoForCreationDto.PublicId = uploadResult.PublicId; 
+            photoForCreationDto.PublicId = uploadResult.PublicId;
 
             var photo = _mapper.Map<Photo>(photoForCreationDto);
 
-            if(!userFromRepo.Photos.Any(u => u.IsMain))
-                photo.IsMain=true;
+            if (!userFromRepo.Photos.Any(u => u.IsMain))
+                photo.IsMain = true;
 
             userFromRepo.Photos.Add(photo);
 
-            
-
-            if(await _repo.SaveAll())
+            if (await _repo.SaveAll())
             {
                 var photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
-                return CreatedAtRoute("GetPhoto", new {userId = userId, id = photo.Id}, photoToReturn);
-            }
-            return BadRequest("Could not add the photo");  
+                return CreatedAtRoute("GetPhoto", new { userId = userId, id = photo.Id }, photoToReturn);
+            };
+
+            return BadRequest("Could not add the photo");
         }
     }
 }
