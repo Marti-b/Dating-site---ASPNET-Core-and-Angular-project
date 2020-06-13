@@ -37,6 +37,8 @@ namespace DatingApp.API.Controllers
 
             _cloudinary = new Cloudinary(acc);
         }
+
+
         [HttpGet("{id}", Name = "GetPhoto")]
         public async Task<IActionResult> GetPhoto(int id)
         {
@@ -58,10 +60,12 @@ namespace DatingApp.API.Controllers
             var userFromRepo = await _repo.GetUser(userId);
             var file = photoForCreationDto.File;
 
+            //storing the result we get back from cloudinary
             var uploadResult = new ImageUploadResult();
 
             if (file.Length > 0)
             {
+                // reading uploaded file into memory
                 using (var stream = file.OpenReadStream())
                 {
                     var uploadParams = new ImageUploadParams
@@ -82,11 +86,17 @@ namespace DatingApp.API.Controllers
             if (!userFromRepo.Photos.Any(u => u.IsMain))
                 photo.IsMain = true;
 
+            // adding the photo to userrepo
             userFromRepo.Photos.Add(photo);
 
+            // save it
             if (await _repo.SaveAll())
             {
+               
                 var photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
+
+                 // if save is succesful, because it is a http post, we return created Route so it returns a location header
+                 // returns string of the route name, object route value in this case Id of the photo, 
                 return CreatedAtRoute("GetPhoto", new { userId = userId, id = photo.Id }, photoToReturn);
             };
 
