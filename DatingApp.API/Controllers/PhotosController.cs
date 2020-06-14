@@ -28,11 +28,11 @@ namespace DatingApp.API.Controllers
             _cloudinaryConfig = cloudinaryConfig;
             _mapper = mapper;
             _repo = repo;
-            
+
             Account acc = new Account(
-              _cloudinaryConfig.Value.CloudName,  
-              _cloudinaryConfig.Value.ApiKey,  
-              _cloudinaryConfig.Value.ApiSecret  
+              _cloudinaryConfig.Value.CloudName,
+              _cloudinaryConfig.Value.ApiKey,
+              _cloudinaryConfig.Value.ApiSecret
             );
 
             _cloudinary = new Cloudinary(acc);
@@ -51,7 +51,7 @@ namespace DatingApp.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddPhotoFor(int userId, [FromForm]PhotoForCreationDto photoForCreationDto)
+        public async Task<IActionResult> AddPhotoFor(int userId, [FromForm] PhotoForCreationDto photoForCreationDto)
         {
             //checking if the user id from the token, matches the user id in the route
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -92,11 +92,11 @@ namespace DatingApp.API.Controllers
             // save it
             if (await _repo.SaveAll())
             {
-               
+
                 var photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
 
-                 // if save is succesful, because it is a http post, we return created Route so it returns a location header
-                 // returns string of the route name, object route value in this case Id of the photo, 
+                // if save is succesful, because it is a http post, we return created Route so it returns a location header
+                // returns string of the route name, object route value in this case Id of the photo, 
                 return CreatedAtRoute("GetPhoto", new { userId = userId, id = photo.Id }, photoToReturn);
             };
 
@@ -109,25 +109,67 @@ namespace DatingApp.API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-             var user = await _repo.GetUser(userId);
+            var user = await _repo.GetUser(userId);
 
-             if(!user.Photos.Any(predicate=>predicate.Id == id))
+            if (!user.Photos.Any(p => p.Id == id))
                 return Unauthorized();
 
             var photoFromRepo = await _repo.GetPhoto(id);
 
-            if(photoFromRepo.IsMain)
+            if (photoFromRepo.IsMain)
                 return BadRequest("This is already the main photo");
 
             var currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
             currentMainPhoto.IsMain = false;
 
-            photoFromRepo.IsMain= true;
+            photoFromRepo.IsMain = true;
 
             if (await _repo.SaveAll())
                 return NoContent();
 
             return BadRequest("Could not set photo to main");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePhoto(int userId, int id)
+        {
+            //checking if the user id from the token, matches the user id in the route
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var user = await _repo.GetUser(userId);
+
+            if (!user.Photos.Any(p => p.Id == id))
+                return Unauthorized();
+
+            var photoFromRepo = await _repo.GetPhoto(id);
+
+            if (photoFromRepo.IsMain)
+                return BadRequest("You cannot delete your main photo");
+
+            // Checking if the photo is coming from Cloudinary, if so, that has PublicId 
+            if (photoFromRepo.PublicId != null)
+            {
+                // Deleting from Cloudinary by creating deletion param and passing it to Destroy method.
+                var deleteParams = new DeletionParams(photoFromRepo.PublicId);
+                var result = _cloudinary.Destroy(deleteParams);
+
+                // Checking if the response in the (DeletionResult) result is (string)"Ok", then we can also delete from repo
+                if (result.Result == "ok")
+                {
+                    _repo.Delete(photoFromRepo);
+                }
+            }
+            // Checking if the photo is coming from a random user API,
+            if (photoFromRepo.PublicId == null)
+            {
+                 _repo.Delete(photoFromRepo);
+            }
+
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to delete the photo");
         }
     }
 }
