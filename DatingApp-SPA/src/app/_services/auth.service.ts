@@ -18,6 +18,7 @@ export class AuthService {
 
   // it is an observable type of BS
   photoUrl = new BehaviorSubject<string>('../../assets/user.png');
+  
   // because this is an observable, it can be subscribed to
   currentPhotoUrl = this.photoUrl.asObservable();
 
@@ -44,8 +45,8 @@ export class AuthService {
       );
   }
 
-  register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model);
+  register(user: User) {
+    return this.http.post(this.baseUrl + 'register', user);
   }
   loggedIn() {
     const token = localStorage.getItem('token');
