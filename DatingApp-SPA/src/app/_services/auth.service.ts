@@ -18,7 +18,7 @@ export class AuthService {
 
   // it is an observable type of BS
   photoUrl = new BehaviorSubject<string>('../../assets/user.png');
-  
+
   // because this is an observable, it can be subscribed to
   currentPhotoUrl = this.photoUrl.asObservable();
 
