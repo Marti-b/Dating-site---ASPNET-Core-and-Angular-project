@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace DatingApp.API.Helpers
 {
@@ -16,7 +17,13 @@ namespace DatingApp.API.Helpers
         public static void AddPagination(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
         {
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
-            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader));
+
+            // Angular app is dealing everything with camelCase therefore it is needed to be formatted that way
+            var camelCaseFormatter = new JsonSerializerSettings();
+            camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader, camelCaseFormatter));
+
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
         public static int CalculateAge(this DateTime theDateTime)
