@@ -7,6 +7,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,14 +29,14 @@ namespace DatingApp.API.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
+        public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var userFromRepo = await _repo.GetUser(currentUserId);
 
             userParams.UserId = currentUserId;
 
-            if(string.IsNullOrEmpty(userParams.Gender))
+            if (string.IsNullOrEmpty(userParams.Gender))
             {
                 userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
             }
@@ -44,13 +45,13 @@ namespace DatingApp.API.Controllers
 
             var userToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
-            Response.AddPagination(users.CurrentPage, users.PageSize, 
+            Response.AddPagination(users.CurrentPage, users.PageSize,
                 users.TotalCount, users.ToltaPages);
 
             return Ok(userToReturn);
         }
         // Name is given that is used as name of the route in AuthController Register method
-        [HttpGet("{id}", Name="GetUser")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _repo.GetUser(id);
@@ -60,7 +61,7 @@ namespace DatingApp.API.Controllers
             return Ok(userToReturn);
         }
 
-       [HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
             //checking if the user id from the token, matches the user id in the route
@@ -75,6 +76,34 @@ namespace DatingApp.API.Controllers
                 return NoContent();
 
             throw new Exception($"Updating user {id} failed on save");
+        }
+        [HttpPost("{id}/like/{recepientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recepientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var like = await _repo.GetLike(id, recepientId);
+
+            if (like != null)
+                return BadRequest("You already liked this user");
+
+            if (await _repo.GetUser(recepientId) == null)
+                return NotFound();
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recepientId
+            };
+
+            // this is not async method, its adding this to memory and not saving back to DB
+            _repo.Add<Like>(like);
+
+            if(await _repo.SaveAll())
+                return Ok();
+            
+            return BadRequest("Failed to like user");
         }
     }
 }
