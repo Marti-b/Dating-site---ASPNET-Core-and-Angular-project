@@ -36,6 +36,7 @@ import { UserService } from './_services/user.service';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { from } from 'rxjs';
+import { ListResolver } from './_resolvers/lists.resolver';
 
 
 
@@ -102,7 +103,8 @@ export function tokenGetter() {
     MemberListResolver,
    // {provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig},
     MemberEditResolver,
-    PreventUnsavedChanges
+    PreventUnsavedChanges,
+    ListResolver
 
   ],
   bootstrap: [
