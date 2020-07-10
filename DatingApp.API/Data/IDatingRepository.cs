@@ -18,5 +18,14 @@ namespace DatingApp.API.Data
 
         // checks if a user hasn't already liked another
          Task<Like> GetLike(int userId, int recipientId);
+
+        // Getting a single message from the database
+         Task<Message> GetMessage (int id);
+         Task<PagedList<Message>> GetMessagesForUser();
+
+         // this is the method for the conversation between two users that is displayed on the tapped panel inside that detail view of user
+         Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId);
+
+
     }
 }
