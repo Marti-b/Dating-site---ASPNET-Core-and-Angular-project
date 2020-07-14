@@ -21,7 +21,7 @@ namespace DatingApp.API.Data
 
         // Getting a single message from the database
          Task<Message> GetMessage (int id);
-         Task<PagedList<Message>> GetMessagesForUser();
+         Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams);
 
          // this is the method for the conversation between two users that is displayed on the tapped panel inside that detail view of user
          Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId);
