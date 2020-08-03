@@ -2,7 +2,7 @@ using System;
 
 namespace DatingApp.API.Dtos
 {
-    public class MessageToReturn
+    public class MessageToReturnDto
     {
         public int Id { get; set; }
         public int SenderId { get; set; }
