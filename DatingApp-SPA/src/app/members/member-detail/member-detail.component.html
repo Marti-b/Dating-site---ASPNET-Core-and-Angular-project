@@ -43,8 +43,9 @@
             <h4>Interests</h4>
             <p>{{user.interests}}</p>
           </tab>
-          <tab heading="Photos"> </tab>
-           <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
+          <tab heading="Photos">
+          <ngx-gallery style="display:inline-block; margin-bottom: 20px;" [options]="galleryOptions"
+            [images]="galleryImages" class="ngx-gallery"></ngx-gallery> </tab>
           <tab heading="Messages">
             <p>Messages will go here</p>
           </tab>
