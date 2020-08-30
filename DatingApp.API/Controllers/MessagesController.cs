@@ -15,7 +15,7 @@ namespace DatingApp.API.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
-    [Route("api/{userId}/[controller]")]
+    [Route("api/users/{userId}/[controller]")]
     [ApiController]
     public class MessagesController : ControllerBase
     {
@@ -44,7 +44,7 @@ namespace DatingApp.API.Controllers
             return Ok(messages);
         } 
 
-        [HttpGet("{if}", Name = "GetMessage")]
+        [HttpGet("{id}", Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

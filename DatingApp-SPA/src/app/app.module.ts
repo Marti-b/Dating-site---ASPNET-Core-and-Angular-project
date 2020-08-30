@@ -37,7 +37,7 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { from } from 'rxjs';
 import { ListResolver } from './_resolvers/lists.resolver';
-import { MessagesResolver } from './_resolvers/messages-resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
 
 
 
