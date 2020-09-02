@@ -33,7 +33,7 @@
               <small class="text-muted">
                 <span class="fa fa-clock-o">{{message.messageSent | timeago}}</span>
                 <span *ngIf="!message.isRead" class="text-danger"> (unread) </span>
-                <span *ngIf="message.isRead" class="text-success">(Read {{message.dateRead}})</span>
+                <span *ngIf="message.isRead" class="text-success">(Read {{message.dateRead | timeago}})</span>
 
               </small>
                <strong class="primary-font float-right">{{message.senderKnownAs}}</strong>
