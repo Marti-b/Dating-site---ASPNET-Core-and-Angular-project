@@ -28,7 +28,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery]MessageParams messageParams)
+        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
@@ -42,7 +42,7 @@ namespace DatingApp.API.Controllers
             Response.AddPagination(messageFromRepo.CurrentPage, messageFromRepo.PageSize, messageFromRepo.TotalCount, messageFromRepo.ToltaPages);
 
             return Ok(messages);
-        } 
+        }
 
         [HttpGet("{id}", Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)
@@ -65,16 +65,16 @@ namespace DatingApp.API.Controllers
 
             if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            
+
             messageForCreationDto.SenderId = userId;
 
             //creating to check if the recipient exists. Still we get this information back in the MessageToReturn thanks to auto mapping "magic".
 
-            /*When we go and get this information from our repo then in memory we have the recipient's details
+            /*By getting this info from repo, we have the recipient's details
             //Because auto mapper by convention is going to attempt to map any properties that it can 
             //And because we have this recipient information inside the memory 
             //Automapper is automatically mapping this information into our MessagesToReturn.*/
-            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId); 
+            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
 
             if (recipient == null)
                 return BadRequest("Could not find user");
@@ -82,26 +82,48 @@ namespace DatingApp.API.Controllers
             var message = _mapper.Map<Message>(messageForCreationDto);
 
             _repo.Add(message);
-         
-            if(await _repo.SaveAll())
+
+            if (await _repo.SaveAll())
             {
                 var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
-                return CreatedAtRoute("GetMessage", new {userId, id= message.Id}, messageToReturn);
+                return CreatedAtRoute("GetMessage", new { userId, id = message.Id }, messageToReturn);
             }
-                
+
 
             throw new Exception("Creating the message failed on save");
         }
         [HttpGet("thread/{recepientId}")]
         public async Task<IActionResult> GetMessageThread(int userId, int recepientId)
         {
-             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
             var messageFromRepo = await _repo.GetMessageThread(userId, recepientId);
             var messageThread = _mapper.Map<IEnumerable<MessageToReturnDto>>(messageFromRepo);
 
             return Ok(messageThread);
+        }
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteMessage(int id, int userId)
+        {
+             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var messageFromRepo = await _repo.GetMessage(id);
+
+            if(messageFromRepo.SenderId == userId)
+                messageFromRepo.SenderDeleted = true;
+
+            if (messageFromRepo.RecipientId == userId)
+                messageFromRepo.RecipientDeleted = true;
+
+            if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
+                _repo.Delete(messageFromRepo);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception("Error deleting the message");
         }
     }
 }
