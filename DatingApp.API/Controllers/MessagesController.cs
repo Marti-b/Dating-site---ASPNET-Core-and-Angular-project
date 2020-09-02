@@ -61,12 +61,20 @@ namespace DatingApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            var sender = await _repo.GetUser(userId);
+
+            if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
             
             messageForCreationDto.SenderId = userId;
 
-            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
+            //creating to check if the recipient exists. Still we get this information back in the MessageToReturn thanks to auto mapping "magic".
+
+            /*When we go and get this information from our repo then in memory we have the recipient's details
+            //Because auto mapper by convention is going to attempt to map any properties that it can 
+            //And because we have this recipient information inside the memory 
+            //Automapper is automatically mapping this information into our MessagesToReturn.*/
+            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId); 
 
             if (recipient == null)
                 return BadRequest("Could not find user");
@@ -74,10 +82,13 @@ namespace DatingApp.API.Controllers
             var message = _mapper.Map<Message>(messageForCreationDto);
 
             _repo.Add(message);
-
-            var messageToReturn = _mapper.Map<MessageForCreationDto>(message);
+         
             if(await _repo.SaveAll())
+            {
+                var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
                 return CreatedAtRoute("GetMessage", new {userId, id= message.Id}, messageToReturn);
+            }
+                
 
             throw new Exception("Creating the message failed on save");
         }
