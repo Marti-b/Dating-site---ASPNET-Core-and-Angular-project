@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-body">
-    <div *ngIf="messages.length == 0">
+    <div *ngIf="messages?.length == 0">
       <p>No messages yet... say hi my using the message box below</p>
     </div>
 
@@ -47,11 +47,15 @@
 
   </div>
   <div class="card-footer">
-    <form action="">
+    <form #messageForm="ngForm" (ngSubmit)="messageForm.valid && sendMessage()">
       <div class="input-group">
-          <input type="text" class="form-control input-sm" placeholder="send a private message">
+          <input type="text"
+          [(ngModel)]="newMessage.content"
+          name="content"
+          required
+          class="form-control input-sm" placeholder="send a private message">
           <div class="input-group-append">
-            <button class="btn btn-primary">Send </button>
+            <button class="btn btn-primary" [disabled]="!messageForm.valid">Send </button>
 
           </div>
       </div>
