@@ -10,7 +10,7 @@ namespace DatingApp.API.Helpers
         {
             this.CurrentPage = currentPage;
             this.ItemsPerPage = itemsPerPage;
-            this.TotalItems = itemsPerPage;
+            this.TotalItems = totalItems;
             this.TotalPages = totalPages;
         }
 
