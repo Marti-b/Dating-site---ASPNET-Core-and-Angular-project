@@ -26,7 +26,7 @@
         <!-- to me -->
         <div *ngIf="message.senderId != message.recipientId">
           <span class="chat-img float-right">
-           <img src="{{message.senderPhotoUrl}}" alt="message.senderKnownAs" class="rounded-circle">
+           <img src="{{message.senderPhotoUrl || '../../assets/user.png'}}" alt="{{message.senderKnownAs}}" class="rounded-circle">
           </span>
           <div class="chat-body">
             <div class="header">
