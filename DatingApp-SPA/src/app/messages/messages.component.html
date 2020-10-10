@@ -31,11 +31,11 @@
         <td>{{message.content}}</td>
         <td>
           <div *ngIf="messageContainer != 'Outbox'">
-                <img src={{message?.senderPhotoUrl}} class="img-circle rounded-circle mr-1">
+                <img src="{{message.senderPhotoUrl || '../assets/user.png'}}" class="img-circle rounded-circle mr-1">
                 <strong>{{message.senderKnownAs}}</strong>
           </div>
           <div *ngIf="messageContainer == 'Outbox'">
-                <img src={{message?.recipientPhotoUrl}} class="img-circle rounded-circle mr-1">
+                <img src="{{message.recipientPhotoUrl || '../assets/user.png'}}" class="img-circle rounded-circle mr-1">
                 <strong>{{message.recipientKnownAs}}</strong>
           </div>
         </td>
